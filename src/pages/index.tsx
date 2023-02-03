@@ -1,11 +1,23 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from '@next/font/google'
+
 import styles from '@/styles/Home.module.css'
 
-const inter = Inter({ subsets: ['latin'] })
+import {run_kdf, benchmark_solver} from "@/pages/pow";
+import {useEffect, useState} from "react";
+import {htmlEscapeJsonString} from "next/dist/server/htmlescape";
+
 
 export default function Home() {
+
+  const [benchResults, setBenchResults] = useState({avg_guess_count: 0, avg_time_taken_ms: 0});
+
+  useEffect(() => {
+    benchmark_solver(2000)
+        .then((res ) => setBenchResults(res));
+  }, []);
+
+
   return (
     <>
       <Head>
@@ -21,33 +33,18 @@ export default function Home() {
             <code className={styles.code}>src/pages/index.tsx</code>
           </p>
           <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
               By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+              splashhh
+
           </div>
         </div>
 
         <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
+          <div>
+            <h2 className={styles.title}> benchmark results </h2>
+            <h3> avg_guess_count : {benchResults.avg_guess_count}</h3>
+            <h3> avg_time : {benchResults.avg_time_taken_ms} ms</h3>
+          </div>
           <div className={styles.thirteen}>
             <Image
               src="/thirteen.svg"
@@ -58,8 +55,11 @@ export default function Home() {
             />
           </div>
         </div>
+        <div className={styles.center}>
+        {/*window: {htmlEscapeJsonString(Window().crypto.randomUUID())}*/}
+        </div>
 
-        <div className={styles.grid}>
+        {/*<div className={styles.grid}>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             className={styles.card}
@@ -116,7 +116,7 @@ export default function Home() {
               with&nbsp;Vercel.
             </p>
           </a>
-        </div>
+        </div>*/}
       </main>
     </>
   )
